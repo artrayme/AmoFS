@@ -6,7 +6,9 @@
 #include <memory>
 #include <stdexcept>
 
-AmoFS::AmoFS(size_t blockSize) : blockSize(blockSize) {
+AmoFS::AmoFS(size_t blockSize) {
+  if (blockSize<1) throw std::invalid_argument("Block size must be greater than 1");
+  this->blockSize = blockSize;
 }
 
 std::shared_ptr<File> AmoFS::createFile(const std::string &filename) {
