@@ -28,6 +28,7 @@ class AmoFS {
   void moveFile(const std::string &oldFilename, const std::string &newFilename) const;
   void writeToFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount) const;
   void readFromFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount) const;
+  size_t getBlockSize();
 };
 
 #endif//AMOFS_AMOFS_AMO_FS_H_

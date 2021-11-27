@@ -52,3 +52,6 @@ void AmoFS::writeToFile(const std::string &filename, const std::shared_ptr<char[
 void AmoFS::readFromFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount) const {
   getFileByName(filename)->readData(buffer, bytesCount);
 }
+size_t AmoFS::getBlockSize() {
+  return blockSize;
+}
