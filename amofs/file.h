@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <memory>
 #include <string>
+
 class File {
   struct Block {
     explicit Block(size_t size) {
@@ -27,8 +28,8 @@ class File {
   friend class AmoFS;
 
  public:
-  void readData(const std::shared_ptr<char[]>& data, size_t bytesCount) const;
-  void writeData(const std::shared_ptr<char[]>& data, size_t bytesCount) const;
+  void readData(const std::shared_ptr<char[]> &data, size_t bytesCount) const;
+  void writeData(const std::shared_ptr<char[]> &data, size_t bytesCount) const;
   std::string getFilename() const;
   size_t getBlockSize() const;
   File(std::string filename, size_t blockSize);
