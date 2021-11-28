@@ -4,10 +4,12 @@
 
 #ifndef AMOFS_TESTUS_TESTUS_H_
 #define AMOFS_TESTUS_TESTUS_H_
+#include "color_utils.h"
 
 class Testus {
 
  public:
+
   void testAll();
 
   void testFilesystemCreation();

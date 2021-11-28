@@ -6,28 +6,38 @@
 #include "../amofs/amo_fs.h"
 #include <iostream>
 
+Color::Modifier testFailedColoring(Color::FG_RED);
+Color::Modifier testPassedColoring(Color::FG_GREEN);
+Color::Modifier defaultColoring(Color::FG_DEFAULT);
+
 void Testus::testAll() {
   testFilesystemCreation();
+  testFileCreation();
 }
 
 void Testus::testFilesystemCreation() {
+
   std::cout << "Filesystem creation test started" << std::endl;
 
   size_t blockSize1 = 10;
   AmoFS filesystem1(blockSize1);
   if (filesystem1.getBlockSize() == blockSize1) {
-    std::cout << "Test 1 Passed" << std::endl;
+    std::cout << testPassedColoring << "Test 1 Passed" << defaultColoring << std::endl;
   } else {
-    std::cout << "Test 1 Failed: expected = " << blockSize1 << ", provided = " << filesystem1.getBlockSize() << std::endl;
+    std::cout << testFailedColoring << "Test 1 Failed: "
+              << "expected = " << blockSize1 << ", actual = " << filesystem1.getBlockSize()
+              << defaultColoring << std::endl;
   }
 
   size_t blockSize2 = 0;
   try {
     AmoFS filesystem2(blockSize2);
-    std::cout<<"Test 2 Failed: expected exception, but... all ok";
-  } catch(const std::invalid_argument &ex) {
-    std::cout << "Test 2 Passed" << std::endl;
+    std::cout << testFailedColoring << "Test 2 Failed: expected exception, but... all ok" << defaultColoring << std::endl;
+  } catch (const std::invalid_argument &ex) {
+    std::cout << testPassedColoring << "Test 2 Passed" << defaultColoring << std::endl;
   }
+
+  std::cout << "Filesystem creation test ended" << std::endl;
 }
 
 void Testus::testFileCreation() {
