@@ -73,7 +73,7 @@ void Testus::testFileCreation() {
   try {
     filesystem.createFile(expectedFilename1);
     std::cout << testFailedColoring << "Test 3 Failed: expected exception, but... all ok" << defaultColoring << std::endl;
-  } catch (std::domain_error &error) {
+  } catch (const std::domain_error &error) {
     std::cout << testPassedColoring << "Test 3 Passed" << defaultColoring << std::endl;
   }
 
@@ -102,7 +102,7 @@ void Testus::testFileDeleting() {
   try {
     filesystem.deleteFile(expectedFilename1);
     std::cout << testFailedColoring << "Test 2 Failed: expected exception, but... all ok" << defaultColoring << std::endl;
-  } catch (std::domain_error &error) {
+  } catch (const std::domain_error &error) {
     std::cout << testPassedColoring << "Test 2 Passed" << defaultColoring << std::endl;
   }
 
@@ -130,6 +130,13 @@ void Testus::testFileMoving() {
     std::cout << testFailedColoring << "Test 1 Failed: "
               << "filename was not changed"
               << defaultColoring << std::endl;
+  }
+
+  try {
+    filesystem.moveFile(expectedFilename1, expectedFilename2);
+    std::cout << testFailedColoring << "Test 2 Failed: expected exception, but... all ok" << defaultColoring << std::endl;
+  } catch (const std::domain_error &error) {
+    std::cout << testPassedColoring << "Test 2 Passed" << defaultColoring << std::endl;
   }
 
   std::cout
