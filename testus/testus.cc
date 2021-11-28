@@ -13,6 +13,7 @@ Color::Modifier defaultColoring(Color::FG_DEFAULT);
 void Testus::testAll() {
   testFilesystemCreation();
   testFileCreation();
+  testFileDeleting();
 }
 
 void Testus::testFilesystemCreation() {
@@ -63,8 +64,16 @@ void Testus::testFileCreation() {
     std::cout << testPassedColoring << "Test 2 Passed" << defaultColoring << std::endl;
   } else {
     std::cout << testFailedColoring << "Test 2 Failed: "
-              << "expected = nullptr" << ", actual1 = " << actual2
+              << "expected = nullptr"
+              << ", actual1 = " << actual2
               << defaultColoring << std::endl;
+  }
+
+  try {
+    filesystem.createFile(expectedFilename1);
+    std::cout << testFailedColoring << "Test 3 Failed: expected exception, but... all ok" << defaultColoring << std::endl;
+  } catch (std::domain_error &error) {
+    std::cout << testPassedColoring << "Test 3 Passed" << defaultColoring << std::endl;
   }
 
   std::cout
@@ -72,6 +81,32 @@ void Testus::testFileCreation() {
 }
 
 void Testus::testFileDeleting() {
+  std::cout << "File deleting test started" << std::endl;
+
+  size_t blockSize = 10;
+  AmoFS filesystem(blockSize);
+
+  std::string expectedFilename1 = "testFile";
+  filesystem.createFile(expectedFilename1);
+  filesystem.deleteFile(expectedFilename1);
+  auto file = filesystem.getFileByName(expectedFilename1);
+  if (file == nullptr) {
+    std::cout << testPassedColoring << "Test 1 Passed" << defaultColoring << std::endl;
+  } else {
+    std::cout << testFailedColoring << "Test 1 Failed: "
+              << "file was not deleted"
+              << defaultColoring << std::endl;
+  }
+
+  try {
+    filesystem.deleteFile(expectedFilename1);
+    std::cout << testFailedColoring << "Test 2 Failed: expected exception, but... all ok" << defaultColoring << std::endl;
+  } catch (std::domain_error &error) {
+    std::cout << testPassedColoring << "Test 2 Passed" << defaultColoring << std::endl;
+  }
+
+  std::cout
+      << "File deleting test ended" << std::endl;
 }
 void Testus::testFileSearching() {
 }
