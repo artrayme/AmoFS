@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 AmoFS::AmoFS(size_t blockSize) {
-  if (blockSize<1) throw std::invalid_argument("Block size must be greater than 1");
+  if (blockSize < 1) throw std::invalid_argument("Block size must be greater than 1");
   this->blockSize = blockSize;
 }
 
@@ -27,17 +27,18 @@ void AmoFS::deleteFile(const std::string &filename) {
 void AmoFS::renameFile(const std::string &oldFilename, const std::string &newFilename) {
   auto file = std::make_shared<File>(oldFilename, blockSize);
   auto searchingResult = files.find(file);
-  if (searchingResult != files.end()){
+  if (searchingResult != files.end()) {
     auto found = *searchingResult;
     found->setFileName(newFilename);
+  } else {
+    throw std::domain_error("File with this name doesn't exist");
   }
-  throw std::domain_error("File with this name doesn't exist");
 }
 
 std::shared_ptr<File> AmoFS::getFileByName(const std::string &filename) {
   auto file = std::make_shared<File>(filename, blockSize);
   auto searchingResult = files.find(file);
-  if (searchingResult != files.end()){
+  if (searchingResult != files.end()) {
     return *searchingResult;
   }
   return {nullptr};
