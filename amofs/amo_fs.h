@@ -23,12 +23,12 @@ class AmoFS {
   explicit AmoFS(size_t blockSize);
   std::shared_ptr<File> createFile(const std::string &filename);
   void deleteFile(const std::string &filename);
-  void renameFile(const std::string &oldFilename, const std::string &newFilename) const;
-  std::shared_ptr<File> getFileByName(const std::string &filename) const;
-  void moveFile(const std::string &oldFilename, const std::string &newFilename) const;
-  void writeToFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount) const;
-  void readFromFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount) const;
-  size_t getBlockSize();
+  void renameFile(const std::string &oldFilename, const std::string &newFilename);
+  std::shared_ptr<File> getFileByName(const std::string &filename);
+  void moveFile(const std::string &oldFilename, const std::string &newFilename);
+  void writeToFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount);
+  void readFromFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount);
+  size_t getBlockSize() const;
 };
 
 #endif//AMOFS_AMOFS_AMO_FS_H_
