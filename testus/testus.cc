@@ -14,6 +14,7 @@ void Testus::testAll() {
   testFilesystemCreation();
   testFileCreation();
   testFileDeleting();
+  testFileMoving();
 }
 
 void Testus::testFilesystemCreation() {
@@ -108,10 +109,33 @@ void Testus::testFileDeleting() {
   std::cout
       << "File deleting test ended" << std::endl;
 }
-void Testus::testFileSearching() {
-}
+
 void Testus::testFileMoving() {
+  std::cout << "File moving test started" << std::endl;
+
+  size_t blockSize = 10;
+  AmoFS filesystem(blockSize);
+
+  std::string expectedFilename1 = "testFile";
+  std::string expectedFilename2 = "testFile2";
+  auto actual1 = filesystem.createFile(expectedFilename1);
+  filesystem.moveFile(expectedFilename1, expectedFilename2);
+  if (actual1->getFilename() == expectedFilename2) {
+    std::cout << testPassedColoring << "Test 1 Passed" << defaultColoring << std::endl;
+  } else if (filesystem.getFileByName(expectedFilename1) != nullptr) {
+    std::cout << testFailedColoring << "Test 1 Failed: "
+              << "file with name \"" << expectedFilename1 << "\" also exists"
+              << defaultColoring << std::endl;
+  } else {
+    std::cout << testFailedColoring << "Test 1 Failed: "
+              << "filename was not changed"
+              << defaultColoring << std::endl;
+  }
+
+  std::cout
+      << "File moving test ended" << std::endl;
 }
+
 void Testus::testFileCoping() {
 }
 void Testus::testFileWritingFromFilesystem() {

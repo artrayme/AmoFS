@@ -18,8 +18,6 @@ class Testus {
 
   void testFileDeleting();
 
-  void testFileSearching();
-
   void testFileMoving();
 
   void testFileCoping();
