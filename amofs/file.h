@@ -12,10 +12,11 @@
 class File {
   struct Block {
     explicit Block(size_t size) {
-      data = std::make_unique<char[]>(size);
+      next = std::shared_ptr<Block>(nullptr);
+      data = std::shared_ptr<char>(new char[size]);
     }
     std::shared_ptr<Block> next;
-    std::shared_ptr<char[]> data;
+    std::shared_ptr<char> data;
   };
   std::string filename;
   size_t blockSize;
@@ -26,10 +27,10 @@ class File {
   void setFileName(const std::string &newFilename);
 
   friend class AmoFS;
+  void readData(const std::shared_ptr<char> &buffer, size_t bytesCount) const;
+  void writeData(const std::shared_ptr<char> &buffer, size_t bytesCount) const;
 
  public:
-  void readData(const std::shared_ptr<char[]> &data, size_t bytesCount) const;
-  void writeData(const std::shared_ptr<char[]> &data, size_t bytesCount) const;
   std::string getFilename() const;
   size_t getBlockSize() const;
   File(std::string filename, size_t blockSize);
