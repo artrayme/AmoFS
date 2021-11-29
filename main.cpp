@@ -1,3 +1,4 @@
+#include "testus/benchmarkus.h"
 #include "testus/testus.h"
 #include <iostream>
 #include <memory>
@@ -6,5 +7,8 @@
 int main() {
   Testus testus;
   testus.testAll();
+//  Benchmarkus benchmarkus;
+//  benchmarkus.testAll();
+
   return 0;
 }

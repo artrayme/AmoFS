@@ -26,10 +26,11 @@ void AmoFS::deleteFile(const std::string &filename) {
 
 void AmoFS::renameFile(const std::string &oldFilename, const std::string &newFilename) {
   auto file = std::make_shared<File>(oldFilename, blockSize);
-  auto searchingResult = files.find(file);
-  if (searchingResult != files.end()) {
-    auto found = *searchingResult;
-    found->setFileName(newFilename);
+  auto searchingResult = getFileByName(oldFilename);
+  if (searchingResult != nullptr) {
+    files.erase(searchingResult);
+    searchingResult->setFileName(newFilename);
+    files.insert(searchingResult);
   } else {
     throw std::domain_error("File with this name doesn't exist");
   }
