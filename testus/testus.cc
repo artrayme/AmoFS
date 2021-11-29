@@ -15,6 +15,7 @@ void Testus::testAll() {
   testFileCreation();
   testFileDeleting();
   testFileMoving();
+  testFileWritingReadingFromFilesystem();
 }
 
 void Testus::testFilesystemCreation() {
@@ -144,12 +145,33 @@ void Testus::testFileMoving() {
 }
 
 void Testus::testFileCoping() {
+
 }
-void Testus::testFileWritingFromFilesystem() {
-}
-void Testus::testFileReadingFromFilesystem() {
-}
-void Testus::testFileWritingFromFile() {
-}
-void Testus::testFileReadingFromFile() {
+
+void Testus::testFileWritingReadingFromFilesystem() {
+  std::cout << "Write to a file from filesystem test started" << std::endl;
+
+  size_t blockSize = 10;
+  AmoFS filesystem(blockSize);
+
+  int *data = new int[1];
+  data[0] = 1234;
+  auto buf = std::shared_ptr<char>((char *) data);
+  std::string expectedFilename1 = "testFile";
+  auto actual1 = filesystem.createFile(expectedFilename1);
+  filesystem.writeToFile(expectedFilename1, buf, sizeof(data));
+
+  int *res = new int[1];
+  auto resBuf = std::shared_ptr<char>((char *) res);
+  filesystem.readFromFile(expectedFilename1, resBuf, sizeof(data));
+  if (data[0] == res[0]) {
+    std::cout << testPassedColoring << "Test 1 Passed" << defaultColoring << std::endl;
+  } else {
+    std::cout << testFailedColoring << "Test 1 Failed: "
+              << "expected data = " << data[0] << ", actual data = " << res[0]
+              << defaultColoring << std::endl;
+  }
+
+  std::cout << "Write to a file from filesystem test ended" << std::endl;
+
 }

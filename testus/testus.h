@@ -22,13 +22,7 @@ class Testus {
 
   void testFileCoping();
 
-  void testFileWritingFromFilesystem();
-
-  void testFileReadingFromFilesystem();
-
-  void testFileWritingFromFile();
-
-  void testFileReadingFromFile();
+  void testFileWritingReadingFromFilesystem();
 };
 
 #endif//AMOFS_TESTUS_TESTUS_H_
