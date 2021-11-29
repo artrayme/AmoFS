@@ -16,6 +16,7 @@ void Testus::testAll() {
   testFileDeleting();
   testFileMoving();
   testFileWritingReadingFromFilesystem();
+  testFileCoping();
 }
 
 void Testus::testFilesystemCreation() {
@@ -145,7 +146,23 @@ void Testus::testFileMoving() {
 }
 
 void Testus::testFileCoping() {
+  std::cout << "File coping test started" << std::endl;
 
+  size_t blockSize = 10;
+  AmoFS filesystem(blockSize);
+  std::string expectedFilename1 = "testFile";
+  std::string expectedFilename2 = "testFile2";
+  auto actual1 = filesystem.createFile(expectedFilename1);
+  auto actual2 = filesystem.copyFile(expectedFilename1, expectedFilename2);
+  if (actual2->getFilename() == expectedFilename2) {
+    std::cout << testPassedColoring << "Test 1 Passed" << defaultColoring << std::endl;
+  } else {
+    std::cout << testFailedColoring << "Test 1 Failed: "
+              << "expected = " << expectedFilename2 << ", actual1 = " << actual2->getFilename()
+              << defaultColoring << std::endl;
+  }
+
+  std::cout << "File coping test ended" << std::endl;
 }
 
 void Testus::testFileWritingReadingFromFilesystem() {
@@ -173,5 +190,4 @@ void Testus::testFileWritingReadingFromFilesystem() {
   }
 
   std::cout << "Write to a file from filesystem test ended" << std::endl;
-
 }
