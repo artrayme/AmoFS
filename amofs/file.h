@@ -25,10 +25,10 @@ class File {
   std::shared_ptr<Block> currentBlock;
 
   void setFileName(const std::string &newFilename);
-
-  friend class AmoFS;
   void readData(const std::shared_ptr<char> &buffer, size_t bytesCount) const;
   void writeData(const std::shared_ptr<char> &buffer, size_t bytesCount) const;
+
+  friend class AmoFS;
 
  public:
   std::string getFilename() const;
@@ -36,6 +36,7 @@ class File {
   File(std::string filename, size_t blockSize);
   bool operator==(const File &rhs) const;
   bool operator!=(const File &rhs) const;
+  File(const File &other);
 };
 
 #endif//AMOFS_AMOFS_FILE_H_

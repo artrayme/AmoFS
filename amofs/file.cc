@@ -3,6 +3,7 @@
 //
 
 #include "file.h"
+#include <memory>
 #include <stdexcept>
 #include <utility>
 
@@ -55,4 +56,21 @@ bool File::operator==(const File &rhs) const {
 
 bool File::operator!=(const File &rhs) const {
   return !(rhs == *this);
+}
+
+File::File(const File &other): filename(other.filename), blockSize(other.blockSize) {
+  bool initFlag = true;
+  std::shared_ptr<Block> curBlock;
+  for (auto thisBlock(other.firstBlock); thisBlock != nullptr; thisBlock = std::move(thisBlock->next)) {
+    curBlock = std::make_shared<Block>(blockSize);
+    currentBlock = curBlock;
+    if (initFlag){
+      firstBlock = curBlock;
+      initFlag = false;
+    }
+    for (size_t j = 0; j < blockSize; ++j) {
+      curBlock->data.get()[j] = thisBlock->data.get()[j];
+    }
+    curBlock = curBlock->next;
+  }
 }

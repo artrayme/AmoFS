@@ -26,8 +26,9 @@ class AmoFS {
   void renameFile(const std::string &oldFilename, const std::string &newFilename);
   std::shared_ptr<File> getFileByName(const std::string &filename);
   void moveFile(const std::string &oldFilename, const std::string &newFilename);
-  void writeToFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount);
-  void readFromFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount);
+  std::shared_ptr<File> copyFile(const std::string &filenameOfOriginal, const std::string &filenameForCopy);
+  void writeToFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount);
+  void readFromFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount);
   size_t getBlockSize() const;
 };
 

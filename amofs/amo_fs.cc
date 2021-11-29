@@ -48,15 +48,27 @@ void AmoFS::moveFile(const std::string &oldFilename, const std::string &newFilen
   renameFile(oldFilename, newFilename);// ahahahha 1-layer filesystem
 }
 
-void AmoFS::writeToFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount) {
+std::shared_ptr<File> AmoFS::copyFile(const std::string &filenameOfOriginal, const std::string &filenameForCopy) {
+  if (!getFileByName(filenameOfOriginal)) throw std::domain_error("File with this name doesn't exist");
+  if (getFileByName(filenameForCopy)) throw std::domain_error("File with this name already exist");
+
+  auto result = std::make_shared<File>(*getFileByName(filenameOfOriginal));
+  result->setFileName(filenameForCopy);
+  files.insert(result);
+  return result;
+}
+
+void AmoFS::writeToFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount) {
   auto destFile = getFileByName(filename);
   for (size_t i = destFile->blockSize * destFile->blocksCount; i < bytesCount; i += destFile->blockSize) {
     destFile->currentBlock->next = std::make_shared<File::Block>(blockSize);
+    destFile->currentBlock = destFile->currentBlock->next;
+    destFile->blocksCount++;
   }
   destFile->writeData(buffer, bytesCount);
 }
 
-void AmoFS::readFromFile(const std::string &filename, const std::shared_ptr<char[]> &buffer, size_t bytesCount) {
+void AmoFS::readFromFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount) {
   getFileByName(filename)->readData(buffer, bytesCount);
 }
 size_t AmoFS::getBlockSize() const {
