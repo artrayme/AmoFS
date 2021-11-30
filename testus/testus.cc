@@ -17,6 +17,7 @@ void Testus::testAll() {
   testFileMoving();
   testFileWritingReadingFromFilesystem();
   testFileCoping();
+  displayFilesystemDump();
 }
 
 void Testus::testFilesystemCreation() {
@@ -190,4 +191,13 @@ void Testus::testFileWritingReadingFromFilesystem() {
   }
 
   std::cout << "Write to a file from filesystem test ended" << std::endl;
+}
+void Testus::displayFilesystemDump() {
+  size_t blockSize = 10;
+  AmoFS filesystem(blockSize);
+  std::cout << "Filesystem dumb is:" << std::endl;
+  filesystem.createFile("testFile1");
+  filesystem.createFile("testFile2");
+  filesystem.createFile("otherTestFile");
+  std::cout<<filesystem.createDump();
 }
