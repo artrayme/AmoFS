@@ -75,3 +75,12 @@ void AmoFS::readFromFile(const std::string &filename, const std::shared_ptr<char
 size_t AmoFS::getBlockSize() const {
   return blockSize;
 }
+std::string AmoFS::createDump() {
+  std::string dumpStr = "{\n  \"Files\": {";
+  for (const auto &file : files) {
+    dumpStr += "\n    \"" + file->getFilename() + "\": {\n      \"DataSize\": \"" + std::to_string(file->blocksCount) + "\"\n    },";
+  }
+  dumpStr.pop_back();
+  dumpStr += "\n  }\n}\n";
+  return dumpStr;
+}

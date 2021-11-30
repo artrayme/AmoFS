@@ -29,6 +29,7 @@ class AmoFS {
   std::shared_ptr<File> copyFile(const std::string &filenameOfOriginal, const std::string &filenameForCopy);
   void writeToFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount);
   void readFromFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount);
+  std::string createDump();
   size_t getBlockSize() const;
 };
 
