@@ -6,36 +6,26 @@
 #define AMOFS_AMOFS_FILE_H_
 
 #include <cstddef>
+#include <list>
 #include <memory>
 #include <string>
+#include <vector>
 
 class File {
-  struct Block {
-    explicit Block(size_t size) {
-      next = std::shared_ptr<Block>(nullptr);
-      data = std::shared_ptr<char>(new char[size]);
-    }
-    std::shared_ptr<Block> next;
-    std::shared_ptr<char> data;
-  };
   std::string filename;
   size_t blockSize;
-  size_t blocksCount;
-  std::shared_ptr<Block> firstBlock;
-  std::shared_ptr<Block> currentBlock;
+  std::list<std::vector<char>> blocks;
 
   void setFileName(const std::string &newFilename);
-  void readData(const std::shared_ptr<char> &buffer, size_t bytesCount) const;
-  void writeData(const std::shared_ptr<char> &buffer, size_t bytesCount) const;
 
   friend class AmoFS;
 
  public:
+  void readData(const std::shared_ptr<char> &buffer, size_t bytesCount) const;
+  void writeData(const std::shared_ptr<char> &buffer, size_t bytesCount);
   std::string getFilename() const;
   size_t getBlockSize() const;
   File(std::string filename, size_t blockSize);
-  bool operator==(const File &rhs) const;
-  bool operator!=(const File &rhs) const;
   File(const File &other);
 };
 

@@ -22,18 +22,19 @@ void AmoFS::deleteFile(const std::string &filename) {
   auto file = std::make_shared<File>(filename, blockSize);
   size_t erasedCount = files.erase(file);
   if (erasedCount == 0) throw std::domain_error("File with this name doesn't exist");
+  file->blocks.clear();
 }
 
 void AmoFS::renameFile(const std::string &oldFilename, const std::string &newFilename) {
   auto file = std::make_shared<File>(oldFilename, blockSize);
   auto searchingResult = getFileByName(oldFilename);
-  if (searchingResult != nullptr) {
-    files.erase(searchingResult);
-    searchingResult->setFileName(newFilename);
-    files.insert(searchingResult);
-  } else {
+
+  if (searchingResult == nullptr) {
     throw std::domain_error("File with this name doesn't exist");
   }
+  files.erase(searchingResult);
+  searchingResult->setFileName(newFilename);
+  files.insert(searchingResult);
 }
 
 std::shared_ptr<File> AmoFS::getFileByName(const std::string &filename) {
@@ -61,10 +62,8 @@ std::shared_ptr<File> AmoFS::copyFile(const std::string &filenameOfOriginal, con
 
 void AmoFS::writeToFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount) {
   auto destFile = getFileByName(filename);
-  for (size_t i = destFile->blockSize * destFile->blocksCount; i < bytesCount; i += destFile->blockSize) {
-    destFile->currentBlock->next = std::make_shared<File::Block>(blockSize);
-    destFile->currentBlock = destFile->currentBlock->next;
-    destFile->blocksCount++;
+  for (size_t i = blockSize * destFile->blocks.size(); i < bytesCount; i += blockSize) {
+    destFile->blocks.emplace_back(std::vector<char>(blockSize));
   }
   destFile->writeData(buffer, bytesCount);
 }
@@ -78,7 +77,7 @@ size_t AmoFS::getBlockSize() const {
 std::string AmoFS::createDump() {
   std::string dumpStr = "{\n  \"Files\": {";
   for (const auto &file : files) {
-    dumpStr += "\n    \"" + file->getFilename() + "\": {\n      \"DataSize\": \"" + std::to_string(file->blocksCount) + "\"\n    },";
+    dumpStr += "\n    \"" + file->getFilename() + "\": {\n      \"DataSize\": \"" + std::to_string(file->blocks.size()) + "\"\n    },";
   }
   dumpStr.pop_back();
   dumpStr += "\n  }\n}\n";
