@@ -1,4 +1,5 @@
 # AmoFS
+
 ## Overview
 This project presents the simplest implementation of a single-level file system with linked blocks.
 
