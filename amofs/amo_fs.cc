@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 AmoFS::AmoFS(size_t blockSize) {
-  if (blockSize < 1) throw std::invalid_argument("Block size must be greater than 1");
+  if (blockSize < 1) throw std::invalid_argument("Block size must be greater than 0");
   this->blockSize = blockSize;
 }
 
