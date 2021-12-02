@@ -14,14 +14,14 @@ AmoFS::AmoFS(size_t blockSize) {
 std::shared_ptr<File> AmoFS::createFile(const std::string &filename) {
   auto file = std::make_shared<File>(filename, blockSize);
   auto insertionResult = files.insert(file);
-  if (!insertionResult.second) throw std::domain_error("File with this name already exist");
+  if (!insertionResult.second) throw std::domain_error("File with name \"" + filename + "\" doesn't exist");
   return file;
 }
 
 void AmoFS::deleteFile(const std::string &filename) {
   auto file = std::make_shared<File>(filename, blockSize);
   size_t erasedCount = files.erase(file);
-  if (erasedCount == 0) throw std::domain_error("File with this name doesn't exist");
+  if (erasedCount == 0) throw std::domain_error("File with name \"" + filename + "\" doesn't exist");
   file->blocks.clear();
 }
 
@@ -30,8 +30,12 @@ void AmoFS::renameFile(const std::string &oldFilename, const std::string &newFil
   auto searchingResult = getFileByName(oldFilename);
 
   if (searchingResult == nullptr) {
-    throw std::domain_error("File with this name doesn't exist");
+    throw std::domain_error("File with name \"" + oldFilename + "\" doesn't exist");
   }
+  if (getFileByName(newFilename) != nullptr) {
+    throw std::domain_error("File with name \"" + newFilename + "\" already exist");
+  }
+
   files.erase(searchingResult);
   searchingResult->setFileName(newFilename);
   files.insert(searchingResult);
@@ -51,8 +55,8 @@ void AmoFS::moveFile(const std::string &oldFilename, const std::string &newFilen
 }
 
 std::shared_ptr<File> AmoFS::copyFile(const std::string &filenameOfOriginal, const std::string &filenameForCopy) {
-  if (!getFileByName(filenameOfOriginal)) throw std::domain_error("File with this name doesn't exist");
-  if (getFileByName(filenameForCopy)) throw std::domain_error("File with this name already exist");
+  if (getFileByName(filenameOfOriginal) != nullptr) throw std::domain_error("File with name \"" + filenameOfOriginal + "\" doesn't exist");
+  if (getFileByName(filenameForCopy) == nullptr) throw std::domain_error("File with name \"" + filenameForCopy + "\" already exist");
 
   auto result = std::make_shared<File>(*getFileByName(filenameOfOriginal));
   result->setFileName(filenameForCopy);
@@ -62,6 +66,9 @@ std::shared_ptr<File> AmoFS::copyFile(const std::string &filenameOfOriginal, con
 
 void AmoFS::writeToFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount) {
   auto destFile = getFileByName(filename);
+  if (destFile == nullptr) {
+    throw std::domain_error("File with name \"" + filename + "\" doesn't exist");
+  }
   for (size_t i = blockSize * destFile->blocks.size(); i < bytesCount; i += blockSize) {
     destFile->blocks.emplace_back(std::vector<char>(blockSize));
   }
@@ -69,7 +76,11 @@ void AmoFS::writeToFile(const std::string &filename, const std::shared_ptr<char>
 }
 
 void AmoFS::readFromFile(const std::string &filename, const std::shared_ptr<char> &buffer, size_t bytesCount) {
-  getFileByName(filename)->readData(buffer, bytesCount);
+  auto file = getFileByName(filename);
+  if (file == nullptr) {
+    throw std::domain_error("File with name \"" + filename + "\" doesn't exist");
+  }
+  file->readData(buffer, bytesCount);
 }
 size_t AmoFS::getBlockSize() const {
   return blockSize;
