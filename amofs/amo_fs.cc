@@ -55,8 +55,8 @@ void AmoFS::moveFile(const std::string &oldFilename, const std::string &newFilen
 }
 
 std::shared_ptr<File> AmoFS::copyFile(const std::string &filenameOfOriginal, const std::string &filenameForCopy) {
-  if (getFileByName(filenameOfOriginal) != nullptr) throw std::domain_error("File with name \"" + filenameOfOriginal + "\" doesn't exist");
-  if (getFileByName(filenameForCopy) == nullptr) throw std::domain_error("File with name \"" + filenameForCopy + "\" already exist");
+  if (getFileByName(filenameOfOriginal) == nullptr) throw std::domain_error("File with name \"" + filenameOfOriginal + "\" doesn't exist");
+  if (getFileByName(filenameForCopy) != nullptr) throw std::domain_error("File with name \"" + filenameForCopy + "\" already exist");
 
   auto result = std::make_shared<File>(*getFileByName(filenameOfOriginal));
   result->setFileName(filenameForCopy);
